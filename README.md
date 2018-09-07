@@ -27,4 +27,10 @@ make dep
 
 // Display help menu
 make help
+
+// Build Docker image
+make docker-build
+
+// Push Docker image
+make docker-push
 ```

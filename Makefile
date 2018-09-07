@@ -34,6 +34,16 @@ build: clean
 	# CGO_ENABLED=0 GOOS=${OS} go build -v -a -installsuffix cgo -o ./build/${APP_NAME} ./cmd/app
 .PHONY: build
 
+# Build Docker image
+.PHONY: docker-build
+docker-build:
+	docker build -f $(DOCKER_IMAGE_NAME)
+
+# Push Docker image to registry
+.PHONY: docker-push
+docker-push:
+	docker push $(DOCKER_IMAGE_NAME)
+
 # Display this help message
 .PHONY: help
 help:
