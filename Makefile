@@ -7,44 +7,36 @@ PACKAGES=$(shell go list ./... | grep -v /vendor/)
 OS=linux
 .DEFAULT_GOAL := help
 
-# Run the unit tests
 .PHONY: test
-test:
+test: ## Run the unit tests
 	go test -v -race $(PACKAGES)
 
-# Lint all files
 .PHONY: lint
-lint:
+lint: ## Lint all files
 	gometalinter.v2 $(PACKAGES)
 
-# Clean up
 .PHONY: clean
-clean:
+clean: ## Clean up
 	@rm -fR ./build/
 
-# Download dependencies
 .PHONY: dep
-dep:
+dep: ## Download dependencies
 	dep ensure -v && dep prune
 
-# Build app
 .PHONY: build
-build: clean
+build: clean ## Build app
 	go build -v -o ./build/${APP_NAME} ./cmd/app
 	# CGO_ENABLED=0 GOOS=${OS} go build -v -a -installsuffix cgo -o ./build/${APP_NAME} ./cmd/app
 .PHONY: build
 
-# Build Docker image
 .PHONY: docker-build
-docker-build:
+docker-build: ## Build Docker image
 	docker build -f $(DOCKER_IMAGE_NAME)
 
-# Push Docker image to registry
 .PHONY: docker-push
-docker-push:
+docker-push: ## Push Docker image to registry
 	docker push $(DOCKER_IMAGE_NAME)
 
-# Display this help message
 .PHONY: help
-help:
+help: ## Display help message
 	@cat $(MAKEFILE_LIST) | grep -e "^[a-zA-Z_\-]*: *.*## *" | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
